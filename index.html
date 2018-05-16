@@ -10,10 +10,75 @@
 			crossorigin="anonymous"></script>
 		</head>
 		<script>
+			var localisations = {
+				marker_hiro: {
+					ugc: {
+						image: 		'#ugc',
+						rotation: 	'0 270 0',
+						text: 		'20m'
+					},
+					mcdo: {
+						image: 		'#mcdo',
+						rotation: 	'0 270 0',
+						text: 		'170m'
+					}, 
+					starbuck: {
+						image: 		'#starbuck',
+						rotation: 	'0 270 0',
+						text: 		'70m'
+					}
+				},
+				marker_1: {
+					ugc: {
+						image: 		'#ugc',
+						rotation: 	'0 90 0',
+						text: 		'200m'
+					},
+					mcdo: {
+						image: 		'#mcdo',
+						rotation: 	'0 90 0',
+						text: 		'50m'
+					}, 
+					starbuck: {
+						image: 		'#starbuck',
+						rotation: 	'0 90 0',
+						text: 		'150m'
+					}
+				},
+				marker_2: {
+					ugc: {
+						image: 		'#ugc',
+						rotation: 	'0 90 0',
+						text: 		'100m'
+					},
+					mcdo: {
+						image: 		'#mcdo',
+						rotation: 	'0 270 0',
+						text: 		'50m'
+					}, 
+					starbuck: {
+						image: 		'#starbuck',
+						rotation: 	'0 90 0',
+						text: 		'50m'
+					}
+				}
+			};
+
 			$(document).ready(function() {
+				$('#selectTarget').val('');
+
 				$('#selectTarget').on('change', function() {
-					$('#img-target').attr('src', $(this).val())
-					$('#txt-target').attr('value', $(this).find(':selected').data('info'))
+					
+					var recherche = $(this).val();
+
+
+					Object.keys(localisations).forEach(function(key){
+						console.log(key, localisations[key][recherche]);
+
+						$('#'+key+ ' a-image').attr('src', localisations[key][recherche].image);
+						$('#'+key+ ' a-entity').attr('rotation', localisations[key][recherche].rotation);
+						$('#'+key+ ' a-text').attr('value', localisations[key][recherche].text);
+					});
 				})
 			});
 		</script>
@@ -23,33 +88,49 @@
 				<div class='col-xs-12 col-sm-6 col-md-4'>
 					<div class='form-group'>
 						<select class="form-control" id="selectTarget" style="margin:10px; background-color:#999">
-							<option value='' data-info='' selected></option>
-							<option value='#troll' data-info='A droite'>Troll</option>
-							<option value='#mcdo' data-info='A gauche'>Mc Do</option>
+							<option value='troll'selected>Choisissez une destination</option>
+							<option value='ugc'>UGC</option>
+							<option value='mcdo'>McDonald's</option>
+							<option value='starbuck'>Starbuck</option>
 						</select>
 					</div>
 				</div>
 			</div>
 		</nav>
 		<a-scene embedded arjs='sourceType: webcam;'>
-
 			<a-assets>
-				<audio id="click-sound" src="audio/click.ogg"></audio>
-							<!-- Images. -->
-				<img id="troll" src="./img/trololololooo.png">
+				<img id="ugc" src="./img/ugc.jpg">
 				<img id="mcdo" src="./img/mcdo.png">
+				<img id="starbuck" src="./img/starbuck.jpg">
+				<img id="troll" src="./img/troll.png">
+				<a-asset-item id="arrow" src="./scene/scene.gltf"></a-asset-item>
 			</a-assets>
 
-			
+			<a-entity gltf-model="#arrow"  position="0 1.2 0" scale="1 1 1"></a-entity>
 
-			<a-marker-camera preset='hiro'>
-				<a-image id="img-target" radius="10" src="#troll"></a-image>
-				<a-box position='0 0.5 0' material='opacity: 0.1;'></a-box>
-				<a-text id="txt-target"  font="kelsonsans" value="Trololololooooo" width="6" position="-1 2 0" rotation="0 0 0"></a-text>
-			</a-marker-camera>
+			<a-marker preset='hiro' id='marker_hiro'>
+				<a-image src="#troll"  rotation="-90 0 0" position="0 0.1 0" scale="2 2 1"></a-image>
+				<a-entity gltf-model="#arrow"  position="0 2 0" rotation="90 0 0" scale="2 2 2"></a-entity>
+				<a-plane color="#000" height="3" width="3" rotation="-90 0 0"></a-plane>
+				<a-text font="kelsonsans" value="Trololololooo" width="6" position="-0.5 0.2 1.3" rotation="-90 0 0"></a-text>
+			</a-marker>
 
+
+			<a-marker type='pattern' url='./marker/pattern-marker-1.patt' id='marker_1'>
+				<a-image src="#troll"  rotation="-90 0 0" position="0 0.1 0" scale="2 2 1"></a-image>
+				<a-entity gltf-model="#arrow"  position="0 2 0" rotation="0 90 0" scale="2 2 2"></a-entity>
+				<a-plane color="#000" height="3" width="3" rotation="-90 0 0"></a-plane>
+				<a-text font="kelsonsans" value="Trololololooo" width="6" position="-0.5 0.2 1.3" rotation="-90 0 0"></a-text>
+			</a-marker>
+
+			<a-marker type='pattern' url='./marker/pattern-marker-2.patt' id='marker_2'>
+				<a-image src="#troll"  rotation="-90 0 0" position="0 0.1 0" scale="2 2 1"></a-image>
+				<a-entity gltf-model="#arrow"  position="0 2 0" rotation="0 90 0" scale="2 2 2"></a-entity>
+				<a-plane color="#000" height="3" width="3" rotation="-90 0 0"></a-plane>
+				<a-text font="kelsonsans" value="Trololololooo" width="6" position="-0.5 0.2 1.3" rotation="-90 0 0"></a-text>
+			</a-marker>
+
+			<a-entity camera></a-entity>
 		</a-scene>
-
-
 	</body>
 </html>
